@@ -1,4 +1,4 @@
-package pl.zankowski.fixparser.messages.dictionary;
+package pl.zankowski.fixparser.messages.api.dictionary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

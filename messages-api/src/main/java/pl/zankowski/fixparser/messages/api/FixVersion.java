@@ -1,4 +1,4 @@
-package pl.zankowski.fixparser.messages;
+package pl.zankowski.fixparser.messages.api;
 
 public enum FixVersion {
 
