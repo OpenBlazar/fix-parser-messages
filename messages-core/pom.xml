@@ -19,12 +19,22 @@
 
         <dependency>
             <groupId>pl.zankowski.fixparser</groupId>
+            <artifactId>messages-spi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.zankowski.fixparser</groupId>
             <artifactId>core-entity</artifactId>
         </dependency>
 
         <dependency>
             <groupId>pl.zankowski.fixparser</groupId>
             <artifactId>common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.zankowski.fixparser</groupId>
+            <artifactId>user-rest-client</artifactId>
         </dependency>
 
         <!-- Spring dependencies -->

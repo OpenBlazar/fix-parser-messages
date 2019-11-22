@@ -3,7 +3,7 @@ package pl.zankowski.fixparser.messages.fix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.zankowski.fixparser.messages.api.FixMessageTO;
-import pl.zankowski.fixparser.messages.fix.entity.FixMessage;
+import pl.zankowski.fixparser.messages.fix.entity.FixMessageEntity;
 
 import java.time.Instant;
 
@@ -17,16 +17,16 @@ public class FixMessageMapper {
         this.fixMessageConverter = fixMessageConverter;
     }
 
-    public FixMessageTO map(final FixMessage message) {
+    public FixMessageTO map(final FixMessageEntity message) {
         return null;
     }
 
-    public FixMessage map(final FixMessageTO message, final Long userId) {
-        return FixMessage.builder()
+    public FixMessageEntity map(final FixMessageTO message, final Long userId) {
+        return FixMessageEntity.builder()
                 .withId(message.getMessageId())
                 .withUserId(userId)
                 .withTimestamp(Instant.now())
-                .withInput(fixMessageConverter.convertToString(message))
+                .withMessage(fixMessageConverter.convertToString(message))
                 .build();
     }
 

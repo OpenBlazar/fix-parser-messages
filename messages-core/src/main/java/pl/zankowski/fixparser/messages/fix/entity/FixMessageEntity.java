@@ -6,22 +6,22 @@ import pl.zankowski.fixparser.core.entity.IEntity;
 import java.time.Instant;
 import java.util.Objects;
 
-public class FixMessage implements IEntity {
+public class FixMessageEntity implements IEntity {
 
     private Long id;
     private Long userId;
     private Instant timestamp;
-    private String input;
+    private String message;
 
-    public FixMessage() {
+    public FixMessageEntity() {
     }
 
-    public FixMessage(final Long id, final Long userId,
-            final Instant timestamp, final String input) {
+    public FixMessageEntity(final Long id, final Long userId,
+            final Instant timestamp, final String message) {
         this.id = id;
         this.userId = userId;
         this.timestamp = timestamp;
-        this.input = input;
+        this.message = message;
     }
 
     public Long getId() {
@@ -48,19 +48,19 @@ public class FixMessage implements IEntity {
         this.timestamp = timestamp;
     }
 
-    public String getInput() {
-        return input;
+    public String getMessage() {
+        return message;
     }
 
-    public void setInput(final String input) {
-        this.input = input;
+    public void setMessage(final String message) {
+        this.message = message;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public static Builder builder(final FixMessage fixMessage) {
+    public static Builder builder(final FixMessageEntity fixMessage) {
         Objects.requireNonNull(fixMessage);
         return new Builder(fixMessage);
     }
@@ -69,16 +69,16 @@ public class FixMessage implements IEntity {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final FixMessage that = (FixMessage) o;
+        final FixMessageEntity that = (FixMessageEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(timestamp, that.timestamp) &&
-                Objects.equals(input, that.input);
+                Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, timestamp, input);
+        return Objects.hash(id, userId, timestamp, message);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class FixMessage implements IEntity {
                 .add("id", id)
                 .add("userId", userId)
                 .add("timestamp", timestamp)
-                .add("input", input)
+                .add("input", message)
                 .toString();
     }
 
@@ -95,16 +95,16 @@ public class FixMessage implements IEntity {
         private Long id;
         private Long userId;
         private Instant timestamp;
-        private String input;
+        private String message;
 
         public Builder() {
         }
 
-        public Builder(final FixMessage fixMessage) {
+        public Builder(final FixMessageEntity fixMessage) {
             this.id = fixMessage.getId();
             this.userId = fixMessage.getUserId();
             this.timestamp = fixMessage.getTimestamp();
-            this.input = fixMessage.getInput();
+            this.message = fixMessage.getMessage();
         }
 
         public Builder withId(final Long id) {
@@ -122,13 +122,13 @@ public class FixMessage implements IEntity {
             return this;
         }
 
-        public Builder withInput(final String input) {
-            this.input = input;
+        public Builder withMessage(final String input) {
+            this.message = input;
             return this;
         }
 
-        public FixMessage build() {
-            return new FixMessage(id, userId, timestamp, input);
+        public FixMessageEntity build() {
+            return new FixMessageEntity(id, userId, timestamp, message);
         }
     }
 }

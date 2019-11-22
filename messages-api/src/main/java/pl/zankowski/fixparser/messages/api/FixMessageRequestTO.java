@@ -8,12 +8,10 @@ import pl.zankowski.fixparser.messages.api.dictionary.DictionaryDescriptorTO;
 @Value.Immutable
 @JsonSerialize(as = ImmutableFixParserRequestTO.class)
 @JsonDeserialize(builder = ImmutableFixParserRequestTO.Builder.class)
-public interface FixParserRequestTO {
+public interface FixMessageRequestTO {
 
     String getUsername();
 
     DictionaryDescriptorTO getDictionaryDescriptor();
-
-    String getInput();
 
 }
