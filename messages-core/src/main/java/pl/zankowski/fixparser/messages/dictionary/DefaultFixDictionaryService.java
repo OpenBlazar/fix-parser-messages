@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -68,14 +69,12 @@ public class DefaultFixDictionaryService implements FixDictionaryService {
     }
 
     @Override
-    public FixDefinitionProvider getDefinitionProvider(
-            final DictionaryDescriptorRequestTO providerDescriptorRequest)
-            throws FixParserBusinessException {
+    public Optional<FixDefinitionProvider> getDefinitionProvider(
+            final DictionaryDescriptorRequestTO providerDescriptorRequest) {
         return userService.findAccountByEmail(providerDescriptorRequest.getUsername())
                 .map(account -> getDefinitionProvider(
                         providerDescriptorRequest.getDictionaryDescriptor(), account.getId()))
-                .orElseThrow(FixParserBusinessException::new)
-                .get();
+                .flatMap(Function.identity());
     }
 
     private Optional<FixDefinitionProvider> getDefinitionProvider(

@@ -1,5 +1,6 @@
 package pl.zankowski.fixparser.messages;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import pl.zankowski.fixparser.messages.api.FixMessageRequestTO;
 import pl.zankowski.fixparser.messages.api.FixMessageTO;
 import pl.zankowski.fixparser.messages.api.FixParserRequestTO;
 import pl.zankowski.fixparser.messages.api.ImmutableFixParserRequestTO;
+import pl.zankowski.fixparser.messages.api.dictionary.ImmutableDictionaryDescriptorRequestTO;
 import pl.zankowski.fixparser.messages.dictionary.FixDictionaryService;
 import pl.zankowski.fixparser.messages.fix.FixMessageConverter;
 import pl.zankowski.fixparser.messages.fix.FixMessageMapper;
@@ -82,10 +84,14 @@ public class DefaultMessageService implements MessageService {
 
     @Override
     public List<FixMessageTO> parseInput(final FixParserRequestTO input) {
-        final List<FixMessageTO> messages = fixParser.parseInput(
-                input.getInput(),
-                dictionaryService.getDefinitionProvider(input.getDictionaryDescriptor())
-        );
+        final List<FixMessageTO> messages = dictionaryService.getDefinitionProvider(
+                ImmutableDictionaryDescriptorRequestTO.builder()
+                        .username(input.getUsername())
+                        .dictionaryDescriptor(input.getDictionaryDescriptor())
+                        .build())
+                .map(fixDefinitionProvider -> fixParser
+                        .parseInput(input.getInput(), fixDefinitionProvider))
+                .orElseGet(Lists::newArrayList);
 
         final boolean shouldSaveMessages = false;
         if (shouldSaveMessages) {
