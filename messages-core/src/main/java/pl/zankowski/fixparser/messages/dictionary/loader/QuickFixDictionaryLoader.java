@@ -25,7 +25,8 @@ public class QuickFixDictionaryLoader implements DictionaryLoader {
     private static final String VALUE_DESCRIPTION_LOCAL = "description";
 
     @Override
-    public Map<Integer, FixFieldDefinition> parseDocument(InputStream documentFile) throws FixParserBusinessException {
+    public Map<Integer, FixFieldDefinition> parseDocument(InputStream documentFile)
+            throws FixParserBusinessException {
         try {
             final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
             final XMLStreamReader streamReader = inputFactory.createXMLStreamReader(documentFile);

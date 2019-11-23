@@ -1,2 +1,9 @@
-# Project exclude paths
-/messages-api/target/
+/*.iml
+/*.ipr
+/*.iws
+/.idea
+/.classpath
+/.project
+/.settings
+*/*.iml
+target/
