@@ -20,7 +20,7 @@ public class FixDictionaryMapper {
                 .build();
     }
 
-    private DictionaryDescriptor map(final DictionaryDescriptorTO dictionaryDescriptor,
+    public DictionaryDescriptor map(final DictionaryDescriptorTO dictionaryDescriptor,
             final Long userId) {
         return DictionaryDescriptor.builder()
                 .withUserId(userId)
