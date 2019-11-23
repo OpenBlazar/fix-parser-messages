@@ -26,6 +26,7 @@
         <module>messages-api</module>
         <module>messages-core</module>
         <module>messages-spi</module>
+        <module>messages-app</module>
     </modules>
 
     <dependencyManagement>
