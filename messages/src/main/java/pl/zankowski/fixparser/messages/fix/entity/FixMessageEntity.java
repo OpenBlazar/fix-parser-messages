@@ -3,11 +3,15 @@ package pl.zankowski.fixparser.messages.fix.entity;
 import com.google.common.base.MoreObjects;
 import pl.zankowski.fixparser.core.entity.IEntity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.Instant;
 import java.util.Objects;
 
+@Entity
 public class FixMessageEntity implements IEntity {
 
+    @Id
     private Long id;
     private Long userId;
     private Instant timestamp;

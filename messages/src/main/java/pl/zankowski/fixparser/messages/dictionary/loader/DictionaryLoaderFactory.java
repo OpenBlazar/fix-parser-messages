@@ -1,6 +1,7 @@
 package pl.zankowski.fixparser.messages.dictionary.loader;
 
 import com.google.common.collect.Maps;
+import org.springframework.stereotype.Component;
 import pl.zankowski.fixparser.messages.api.dictionary.DictionaryLoaderType;
 
 import java.util.List;

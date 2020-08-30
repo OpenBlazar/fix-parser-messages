@@ -1,6 +1,7 @@
 package pl.zankowski.fixparser.messages.fix;
 
 import com.google.common.collect.Lists;
+import org.springframework.stereotype.Component;
 import pl.zankowski.fixparser.messages.api.FixFieldTO;
 import pl.zankowski.fixparser.messages.api.FixMessageTO;
 import pl.zankowski.fixparser.messages.api.FixPairTO;
@@ -13,6 +14,7 @@ import pl.zankowski.fixparser.messages.dictionary.FixDefinitionProvider;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class FixMessageConverter {
 
     public static final String FIELD_DELIMITER = "=";
@@ -21,7 +23,7 @@ public class FixMessageConverter {
     public static final char ENTRY_DELIMITER = '\u0001';
 
     public List<FixMessageTO> convertToFixMessages(final List<String> textMessages, final String delimiter,
-            final FixDefinitionProvider definitionProvider) {
+                                                   final FixDefinitionProvider definitionProvider) {
         final List<FixMessageTO> messages = Lists.newArrayList();
         long counter = 0;
         for (final String textMessage : textMessages) {
@@ -30,9 +32,9 @@ public class FixMessageConverter {
         return messages;
     }
 
-    public FixMessageTO convertToFixMessage(final String textMessage, final String delimiter,
-            final long counter, final FixDefinitionProvider definitionProvider) {
-        final String[] fields = textMessage.split("//" + delimiter);
+    private FixMessageTO convertToFixMessage(final String textMessage, final String delimiter,
+                                            final long counter, final FixDefinitionProvider definitionProvider) {
+        final String[] fields = textMessage.split("\\" + delimiter);
         final List<FixPairTO> messageFields = Lists.newArrayList();
 
         for (String field : fields) {
@@ -51,7 +53,7 @@ public class FixMessageConverter {
         return toFixMessage(messageFields, counter);
     }
 
-    protected FixMessageTO toFixMessage(final List<FixPairTO> messageFields, final long counter) {
+    private FixMessageTO toFixMessage(final List<FixPairTO> messageFields, final long counter) {
         final ImmutableFixMessageTO.Builder messageBuilder = ImmutableFixMessageTO.builder();
         final FixPairTO version = getField(messageFields, 8);
         if (version != null) {
@@ -81,7 +83,7 @@ public class FixMessageConverter {
         return convertToString(fixMessage, ENTRY_DELIMITER);
     }
 
-    public String convertToString(final FixMessageTO fixMessage, final char entryDelimiter) {
+    private String convertToString(final FixMessageTO fixMessage, final char entryDelimiter) {
         final StringBuilder builder = new StringBuilder();
         fixMessage.getMessageFields().forEach((pair) -> {
             builder.append(pair.getFixField().getTag());

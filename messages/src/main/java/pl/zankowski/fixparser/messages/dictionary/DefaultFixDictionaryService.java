@@ -1,7 +1,7 @@
 package pl.zankowski.fixparser.messages.dictionary;
 
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pl.zankowski.fixparser.core.api.FixParserBusinessException;
 import pl.zankowski.fixparser.messages.api.dictionary.DictionaryDescriptorRequestTO;
 import pl.zankowski.fixparser.messages.api.dictionary.DictionaryDescriptorTO;
@@ -11,30 +11,28 @@ import pl.zankowski.fixparser.messages.dictionary.entity.FixDictionary;
 import pl.zankowski.fixparser.messages.dictionary.entity.FixFieldDefinition;
 import pl.zankowski.fixparser.messages.dictionary.loader.DictionaryLoader;
 import pl.zankowski.fixparser.messages.dictionary.loader.DictionaryLoaderFactory;
-import pl.zankowski.fixparser.user.spi.UserService;
 
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.toSet;
 
+@Service
 public class DefaultFixDictionaryService implements FixDictionaryService {
 
     private final DictionaryLoaderFactory dictionaryLoaderFactory;
-    private final MongoFixDictionaryRepository fixDictionaryRepository;
+    private final FixDictionaryRepository fixDictionaryRepository;
     private final FixDictionaryMapper fixDictionaryMapper;
-    private final UserService userService;
 
     @Autowired
-    public DefaultFixDictionaryService(final MongoFixDictionaryRepository fixDictionaryRepository,
-            final FixDictionaryMapper fixDictionaryMapper, final UserService userService) {
-        this.dictionaryLoaderFactory = new DictionaryLoaderFactory(Lists.newArrayList());
+    public DefaultFixDictionaryService(final DictionaryLoaderFactory dictionaryLoaderFactory,
+                                       final FixDictionaryRepository fixDictionaryRepository,
+                                       final FixDictionaryMapper fixDictionaryMapper) {
+        this.dictionaryLoaderFactory = dictionaryLoaderFactory;
         this.fixDictionaryRepository = fixDictionaryRepository;
         this.fixDictionaryMapper = fixDictionaryMapper;
-        this.userService = userService;
     }
 
     @Override
@@ -52,29 +50,10 @@ public class DefaultFixDictionaryService implements FixDictionaryService {
     }
 
     @Override
-    public void saveDictionary(final DictionaryInsertRequestTO dictionaryInsertRequest)
-            throws FixParserBusinessException {
-        final DictionaryLoader dictionaryLoader = dictionaryLoaderFactory.getDictionaryLoader(
-                dictionaryInsertRequest.getDictionary().getDictionaryDescriptor().getLoaderType());
-        final Map<Integer, FixFieldDefinition> parsedDictionary = dictionaryLoader.parseDocument(
-                new ByteArrayInputStream(dictionaryInsertRequest.getDictionary().getContent()));
-
-        userService.findAccountByEmail(dictionaryInsertRequest.getUsername())
-                .ifPresent(account -> {
-                    final FixDictionary dictionary = fixDictionaryMapper
-                            .map(dictionaryInsertRequest.getDictionary(), account.getId(),
-                                    parsedDictionary);
-                    fixDictionaryRepository.save(dictionary);
-                });
-    }
-
-    @Override
     public Optional<FixDefinitionProvider> getDefinitionProvider(
             final DictionaryDescriptorRequestTO providerDescriptorRequest) {
-        return userService.findAccountByEmail(providerDescriptorRequest.getUsername())
-                .map(account -> getDefinitionProvider(
-                        providerDescriptorRequest.getDictionaryDescriptor(), account.getId()))
-                .flatMap(Function.identity());
+        return getDefinitionProvider(
+                providerDescriptorRequest.getDictionaryDescriptor(), null);
     }
 
     private Optional<FixDefinitionProvider> getDefinitionProvider(
@@ -86,14 +65,16 @@ public class DefaultFixDictionaryService implements FixDictionaryService {
     }
 
     @Override
-    public void removeDictionary(final DictionaryDescriptorRequestTO providerDescriptorRequest) {
-        userService.findAccountByEmail(providerDescriptorRequest.getUsername())
-                .ifPresent(account -> {
-                    fixDictionaryRepository.deleteById(
-                            fixDictionaryMapper
-                                    .map(providerDescriptorRequest.getDictionaryDescriptor(),
-                                            account.getId()));
-                });
+    public void saveDictionary(final DictionaryInsertRequestTO dictionaryInsertRequest)
+            throws FixParserBusinessException {
+        final DictionaryLoader dictionaryLoader = dictionaryLoaderFactory.getDictionaryLoader(
+                dictionaryInsertRequest.getDictionary().getDictionaryDescriptor().getLoaderType());
+        final Map<Integer, FixFieldDefinition> parsedDictionary = dictionaryLoader.parseDocument(
+                new ByteArrayInputStream(dictionaryInsertRequest.getDictionary().getContent()));
+
+        final FixDictionary dictionary = fixDictionaryMapper
+                .map(dictionaryInsertRequest.getDictionary(), null, parsedDictionary);
+        fixDictionaryRepository.save(dictionary);
     }
 
 }

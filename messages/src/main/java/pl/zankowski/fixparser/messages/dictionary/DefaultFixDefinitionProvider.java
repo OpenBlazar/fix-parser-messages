@@ -9,6 +9,7 @@ import pl.zankowski.fixparser.messages.dictionary.entity.FixDictionary;
 import pl.zankowski.fixparser.messages.dictionary.entity.FixFieldDefinition;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class DefaultFixDefinitionProvider implements FixDefinitionProvider {
 
@@ -46,16 +47,10 @@ public class DefaultFixDefinitionProvider implements FixDefinitionProvider {
         }
 
         final String valueDescription = fieldDefinition.getValues().get(valueEnum);
-        if (valueDescription == null) {
-            return ImmutableFixValueTO.builder()
-                    .value(valueEnum)
-                    .description(EMPTY_DESCRIPTION)
-                    .build();
-        }
-
         return ImmutableFixValueTO.builder()
                 .value(valueEnum)
-                .description(valueDescription)
+                .description(Objects.requireNonNullElse(valueDescription, EMPTY_DESCRIPTION))
                 .build();
+
     }
 }

@@ -1,4 +1,4 @@
-package pl.zankowski.fixparser.messages.app;
+package pl.zankowski.fixparser.messages;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
